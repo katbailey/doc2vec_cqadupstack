@@ -1,10 +1,12 @@
 Doc2Vec CQADupStack
 ====================
 
-This repo provides code for reproducing the results of Jey Hau Lau and Timothy Baldwin in their paper, [An Empirical Evaluation of doc2vec with
+This repo provides code for reproducing the results of J. Lau and T. Baldwin in their paper, [An Empirical Evaluation of doc2vec with
 Practical Insights into Document Embedding Generation](https://arxiv.org/pdf/1607.05368v1.pdf)
 
 It currently only works with the dataset used for the forum question duplication task, CQADupStack. The dataset for this is available from http://nlp.cis.unimelb.edu.au/resources/cqadupstack/ and the script for processing it is included as a submodule of this repo.
+
+The notebook.ipynb illustrates plotting the results of the cosine similarity on learned vectors for one of the forums, as well as visualizing reduced vectors using TSNE.
 
 There is one script in this repo, run.py, which allows you to perform all the necessary actions to extract a forum dataset, extract a small training set to work with (as described in the Lau paper), extract a test set of 10M documents, train a doc2vec model, and infer document vectors for all documents. It also allows you to infer document vectors using Lau et al's pretrained models from external corpora, Associated Press News and Wikipedia. These pretrained models are linked to from https://github.com/jhlau/doc2vec.
 
