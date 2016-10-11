@@ -12,7 +12,7 @@ There is one script in this repo, run.py, which allows you to perform all the ne
 
 In addition to the pre-trained doc2vec models from external corpora, Lau et al created pretrained word2vec word embeddings from AP News and Wikipedia. These word embeddings are also linked to from the above github repo and can be used with this script to train new models.
 
-It is also possible to use [GloVe embeddings](http://nlp.stanford.edu/projects/glove/) after using the script to convert them to the correct format using the script. See instructions below.
+It is also possible to use [GloVe embeddings](http://nlp.stanford.edu/projects/glove/) after using the script to convert them to the correct format. See instructions below.
 
 Requirements
 -------------
