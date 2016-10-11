@@ -1,4 +1,5 @@
 Doc2Vec CQADupStack
+---------------------
 
 This repo provides code for reproducing the results of Jey Hau Lau and Timothy Baldwin in their paper, [An Empirical Evaluation of doc2vec with
 Practical Insights into Document Embedding Generation](https://arxiv.org/pdf/1607.05368v1.pdf)
@@ -62,7 +63,7 @@ To use a different model, e.g. one of of the pretrained doc2vec models, to infer
 python run.py --name="english" --location="some/path" --model="path/to/pretrained/doc2vec/model/file" infer-doc-vectors
 ````
 
-To train a model using pre-trained word-embeddings, the embeddings need to be in the non-binary word2vec format. The files linked to the from the Lau repo are not in this format so can use the `convert-pretrained` command to convert them:
+To train a model using pre-trained word-embeddings, the embeddings need to be in the non-binary word2vec format. The files linked to the from the Lau repo are not in this format but you can use the `convert-pretrained` command to convert them:
 ````
 python run.py --words="path/to/apnews_sg/word2vec.bin" convert-pretrained
 ````
