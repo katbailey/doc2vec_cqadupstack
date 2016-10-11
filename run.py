@@ -158,13 +158,28 @@ def extract_all_docs(name, location):
 
 def convert_word2vec_bin_to_nonbin(binary_words_file):
     fname, ext = os.path.splitext(binary_words_file)
-    print(fname)
     if not ext == ".bin":
         raise Exception("Pass a binary file of word embeddings")
     output_file = "%s.txt" % fname
     model = g.Word2Vec.load(binary_words_file)
     print("Model loaded, saving non-binary version to %s" % output_file)
     model.save_word2vec_format(output_file, binary=False)
+
+def convert_glove_to_word2vec(glove_embeddings_file):
+    fname, ext = os.path.splitext(glove_embeddings_file)
+    output_fname = "%s.word2vec.txt" % fname
+    output_file = open(output_fname, "wb")
+
+    with open(glove_embeddings_file, "rb") as f:
+        lines = f.readlines()
+        num_lines = len(lines)
+        num_dims = len(lines[0].split()) - 1
+        gensim_first_line = "{} {}".format(num_lines, num_dims)
+        output_file.write(gensim_first_line + "\n")
+        for line in lines:
+            output_file.write(line)
+    output_file.close()
+    print("Created word2vec version of glove file at %s" % output_fname)
 
 if __name__ == '__main__':
     usage = "usage: %prog [options] command"
@@ -176,6 +191,7 @@ if __name__ == '__main__':
     parser.add_option("-m", "--model", dest="model", help="Specify a pre-trained model to use for inferring vectors")
     parser.add_option("-d", "--docs", dest="docs", help="Specify a file containing documents to infer vectors for")
     parser.add_option("-w", "--words", dest="word_embeddings", help="Specify a file containing pre-trained word embeddings to use")
+    parser.add_option("-g", "--gloves", dest="gloves", help="Specify a file containing pre-trained GloVe word embeddings to convert to word2vec format")
 
     (options, args) = parser.parse_args()
     if len(args) == 0:
@@ -212,7 +228,10 @@ if __name__ == '__main__':
         infer_doc_vectors(**d)
     elif args[0] == "extract-doc-text" and type(options.name) != type(None) and type(options.location) != type(None):
         extract_all_docs(options.name, options.location)
-    elif args[0] == "convert-pretrained" and type(options.word_embeddings) != type(None):
-        convert_word2vec_bin_to_nonbin(options.word_embeddings)
+    elif args[0] == "convert-pretrained":
+        if type(options.word_embeddings) != type(None):
+            convert_word2vec_bin_to_nonbin(options.word_embeddings)
+        elif type(options.gloves) != type(None):
+            convert_glove_to_word2vec(options.gloves)
     else:
         parser.print_help()

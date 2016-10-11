@@ -72,4 +72,13 @@ This will produce "path/to/apnews_sg/word2vec.txt", which can then be used to tr
 python run.py --words="path/to/apnews_sg/word2vec.txt" --name="english" --location="some/location" train-model
 ````
 
+To use GloVe embeddings, these first need to be converted to word2vec format. Instead of `--words`, use the `--gloves` option when running convert-pretrained:
+````
+python run.py --gloves="path/to/glove/embeddings.txt" convert-pretrained
+````
+This will create a new file at "path/to/glove/embeddings.word2vec.txt", which can then be used to train a doc2vec model:
+````
+python run.py --words="path/to/glove/embeddings.word2vec.txt" --name="english" --location="some/location" train-model
+````
+
 The default number of iterations when training a model is 20, for inference it's 1000. For either command this can be overridden with the `--iter` option.
