@@ -1,5 +1,5 @@
 Doc2Vec CQADupStack
----------------------
+====================
 
 This repo provides code for reproducing the results of Jey Hau Lau and Timothy Baldwin in their paper, [An Empirical Evaluation of doc2vec with
 Practical Insights into Document Embedding Generation](https://arxiv.org/pdf/1607.05368v1.pdf)
@@ -11,11 +11,11 @@ There is one script in this repo, run.py, which allows you to perform all the ne
 In addition to the pre-trained doc2vec models from external corpora, Lau et al created pretrained word2vec word embeddings from AP News and Wikipedia. These word embeddings are also linked to from the above github repo and can be used with this script to train new models.
 
 Requirements
-=============
+-------------
 Lau et all [forked gensim](https://github.com/jhlau/gensim) to add the ability to train document vectors using pre-trained word embeddings. This repo provides a conda environment.yml file so you can create the environment needed to use this forked version of gensim.
 
 Usage
-======
+------
 To create the required python environment and activate it, run the following from the command line:
 ````
 cd doc2vec_cqadup
