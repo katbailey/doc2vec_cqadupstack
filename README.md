@@ -12,6 +12,8 @@ There is one script in this repo, run.py, which allows you to perform all the ne
 
 In addition to the pre-trained doc2vec models from external corpora, Lau et al created pretrained word2vec word embeddings from AP News and Wikipedia. These word embeddings are also linked to from the above github repo and can be used with this script to train new models.
 
+It is also possible to use [GloVe embeddings](http://nlp.stanford.edu/projects/glove/) after using the script to convert them to the correct format using the script. See instructions below.
+
 Requirements
 -------------
 Lau et all [forked gensim](https://github.com/jhlau/gensim) to add the ability to train document vectors using pre-trained word embeddings. This repo provides a conda environment.yml file so you can create the environment needed to use this forked version of gensim.
@@ -20,67 +22,67 @@ Usage
 ------
 To create the required python environment and activate it, run the following from the command line:
 ````
-cd doc2vec_cqadup
-conda env create -f environment.yml
-source activate doc2vec
+$ cd doc2vec_cqadup
+$ conda env create -f environment.yml
+$ source activate doc2vec
 ````
 
 Assuming you have downloaded the zip files for the CQADupStack forum data to "path/to/cqadup/zip/files", to extract a particular forum dataset and run the train/test split provided by the CQADupStack script, run:
 ````
-python run.py --name="english" --location="some/path" --cqadup-path="path/to/cqadup/zip/files" extract-dataset
+$ python run.py --name="english" --location="some/path" --cqadup-path="path/to/cqadup/zip/files" extract-dataset
 ````
 This will place the extracted files for the "english" forum at "some/path". You will use this location for all of the extracted/processed files, including trained models and inferred vectors.
 
 To extract a tiny training set of roughly 3000 negative and 300 positive examples, run:
 ```
-python run.py --name="english" --location="some/path" extract-train-set
+$ python run.py --name="english" --location="some/path" extract-train-set
 ```
 
 To extract a test set of 10M docs (using uniform random sampling, per the paper), run:
 ```
-python run.py --name="english" --location="some/path" extract-test-set
+$ python run.py --name="english" --location="some/path" extract-test-set
 ```
 
 To extract the text for all the documents into a file that has one document per line (as required by doc2vec), run:
 ````
-python run.py --name="english" --location="some/path" extract-doc-text
+$ python run.py --name="english" --location="some/path" extract-doc-text
 ```` 
 
 To train a model from scratch using all of the documents:
 ````
-python run.py --name="english" --location="some/path" train-model
+$ python run.py --name="english" --location="some/path" train-model
 ````
 
 This will result in a model.bin file being place at "some/path". To infer vectors for all the docs in the forum based on this model, run:
 ````
-python run.py --name="english" --location="some/path" infer-doc-vectors
+$ python run.py --name="english" --location="some/path" infer-doc-vectors
 ````
 
 To infer vectors for some other set of documents based on this model, run:
 ````
-python run.py --name="english" --location="some/path" --docs="path/to/some/docs/file" infer-doc-vectors
+$ python run.py --name="english" --location="some/path" --docs="path/to/some/docs/file" infer-doc-vectors
 ````
 To use a different model, e.g. one of of the pretrained doc2vec models, to infer vectors for all the docs in the forum, run:
 ````
-python run.py --name="english" --location="some/path" --model="path/to/pretrained/doc2vec/model/file" infer-doc-vectors
+$ python run.py --name="english" --location="some/path" --model="path/to/pretrained/doc2vec/model/file" infer-doc-vectors
 ````
 
 To train a model using pre-trained word-embeddings, the embeddings need to be in the non-binary word2vec format. The files linked to the from the Lau repo are not in this format but you can use the `convert-pretrained` command to convert them:
 ````
-python run.py --words="path/to/apnews_sg/word2vec.bin" convert-pretrained
+$ python run.py --words="path/to/apnews_sg/word2vec.bin" convert-pretrained
 ````
 This will produce "path/to/apnews_sg/word2vec.txt", which can then be used to train new document vectors:
 ````
-python run.py --words="path/to/apnews_sg/word2vec.txt" --name="english" --location="some/location" train-model
+$ python run.py --words="path/to/apnews_sg/word2vec.txt" --name="english" --location="some/location" train-model
 ````
 
 To use GloVe embeddings, these first need to be converted to word2vec format. Instead of `--words`, use the `--gloves` option when running convert-pretrained:
 ````
-python run.py --gloves="path/to/glove/embeddings.txt" convert-pretrained
+$ python run.py --gloves="path/to/glove/embeddings.txt" convert-pretrained
 ````
 This will create a new file at "path/to/glove/embeddings.word2vec.txt", which can then be used to train a doc2vec model:
 ````
-python run.py --words="path/to/glove/embeddings.word2vec.txt" --name="english" --location="some/location" train-model
+$ python run.py --words="path/to/glove/embeddings.word2vec.txt" --name="english" --location="some/location" train-model
 ````
 
 The default number of iterations when training a model is 20, for inference it's 1000. For either command this can be overridden with the `--iter` option.
