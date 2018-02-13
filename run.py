@@ -99,11 +99,18 @@ def extract_test_set(name, location):
     fp.close()
     print("Created test set at %s" % output_file)
 
-def train_model(name, location, pretrained_emb = None, vector_size = 300, window_size = 15, min_count = 5, sampling_threshold = 1e-5, negative_size = 5, train_epoch = 20, dm = 0, worker_count = 1):
+def train_model(name, location, docs_file = None, pretrained_emb = None, vector_size = 300, window_size = 15, min_count = 5, sampling_threshold = 1e-5, negative_size = 5, train_epoch = 20, dm = 0, worker_count = 1):
+    if name == None or location == None:
+        if docs_file == None:
+            raise Exception("No training corpus provided!")
+        train_corpus = docs_file
+        output_file = "%s.model.bin" % docs_file
+    else:
+        train_corpus = "%s/%s/%s_docs.txt" % (location, name, name)
+        output_file = "%s/%s/model.bin" % (location, name)
     #enable logging
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-    train_corpus = "%s/%s/%s_docs.txt" % (location, name, name)
-    output_file = "%s/%s/model.bin" % (location, name)
+
     #train doc2vec model
     docs = g.doc2vec.TaggedLineDocument(train_corpus)
     model = g.Doc2Vec(docs, size=vector_size, window=window_size, min_count=min_count, sample=sampling_threshold, workers=worker_count, hs=0, dm=dm, negative=negative_size, dbow_words=1, dm_concat=0, pretrained_emb=pretrained_emb, iter=train_epoch)
@@ -204,8 +211,16 @@ if __name__ == '__main__':
         extract_train_set(options.name, options.location)
     elif args[0] == "extract-test-set" and type(options.name) != type(None) and type(options.location) != type(None):
         extract_test_set(options.name, options.location)
-    elif args[0] == "train-model" and type(options.name) != type(None) and type(options.location) != type(None):
+    elif args[0] == "train-model":
         d = {}
+        if type(options.name) != type(None) and type(options.location) != type(None):
+            d['name'] = options.name
+            d['location'] = options.location
+        elif type(options.docs) != type(None):
+            d['docs_file'] = options.docs
+        else:
+            print("You must either specify name and loation or a docs file to train a model")
+            exit(-1)
         if type(options.num_iter) != type(None):
             d['train_epoch'] = int(options.num_iter)
         if type(options.word_embeddings) != type(None):
@@ -218,6 +233,7 @@ if __name__ == '__main__':
             d['location'] = options.location
         elif type(options.docs) != type(None) and type(options.model) != type(None):
             d['docs_file'] = options.docs
+            d['model_file'] = options.model
         else:
             print("You must either specify name and loation or a docs file and model for inferring vectors")
             exit(-1)
